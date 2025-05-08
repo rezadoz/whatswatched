@@ -14,6 +14,9 @@ terminal-philes that want to keep track of what episode they're on in a media di
 * [How It Works](#how-it-works)
 * [Data Format](#data-format)
 
+![image](https://github.com/user-attachments/assets/3c45fbda-a2d6-4a39-8269-a2a46956046c)
+
+
 ## Features
 
 * Scans a directory for media files with extensions: `.mp4`, `.mkv`, `.avi`, `.mov`. (line 19 of code)
