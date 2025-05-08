@@ -1,9 +1,9 @@
 # whatswatched
-A command-line tool to track and play media files in a directory using `mpv`. It maintains a JSON-based watch history (in the form of a hidden json within the directory of the media), allowing you to resume from where you left off.
+A command-line tool to track and play media files in a directory using `mpv` (or whatever you want). It maintains a watch history (in the form of a hidden `.whatswatched.json` file in the same directory of the media), allowing you to track your progress, resume from where you left off, and slightly more!
 
 ## This is for
 
-People that want to keep track of what episode they're on in a media directory without leaving their command line... that also use `mpv`.
+terminal-philes that want to keep track of what episode they're on in a media directory without leaving their command line
 
 ## Table of Contents
 
@@ -11,26 +11,21 @@ People that want to keep track of what episode they're on in a media directory w
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
-
-  * [Marking a Specific File as Current](#marking-a-specific-file-as-current)
-  * [Verbose Output](#verbose-output)
-  * [Help](#help)
 * [How It Works](#how-it-works)
 * [Data Format](#data-format)
 
 ## Features
 
-* Scans a directory for media files with extensions: `.mp4`, `.mkv`, `.avi`, `.mov`.
+* Scans a directory for media files with extensions: `.mp4`, `.mkv`, `.avi`, `.mov`. (line 19 of code)
 * Tracks watched status and timestamps in `.whatswatched.json`.
-* Allows manual setting of the current episode.
-* Plays media files using `mpv`.
-* Prompts to mark media as watched after playback.
-* Automatically advances to the next unwatched file.
+* Allows manual setting of the current episode or watched flags.
+* Plays media files using `mpv` by default, different command strings can be supplied with the `--player` option.
+* Prompts to mark media as watched after playback (which advances the set current episode) and prompts the user to contine the current episode playback loop
 
-## Requirements
+## Requirement
 
 * Python 3.6 or higher.
-* `mpv` media player 
+* `mpv` media player (or whatever media player you want that can be launched from command line such as `vlc`)
 
 ## Installation
 
@@ -56,7 +51,7 @@ People that want to keep track of what episode they're on in a media directory w
    chmod +x whatswatched.py
    ```
 
-
+4. (Optional) put it somewhere else, make an alias for your shell or symlink to use the script like a command
 
 ## Usage
 
@@ -66,59 +61,39 @@ Run the script from the command line:
 ./whatswatched.py [options]
 ```
 
-If you are doing this in a media directory for the first time, this will create the JSON file to index the videos in the directory. Then you will have to manually set the first episode with the `--current` option.
-
-```bash
-./whatswatched.py --current /path/to/Episode1.mkv
-```
-
-After doing that you can run the script without options to prompt if you want to play the current episode in that directory.
+If you are doing this in a media directory for the first time, this will create the JSON file to index the videos in the directory.
 
 **TIP:** You can press `shift+q` to exit and save your resume posistion for when you reopen it with `mpv`. This is great if you're partially through the media file and want to resume it later. `whatswatched` is blind to this, which is why it asks you if you finished watching the media file when you exit `mpv`. If you give an affirmative input it mark the next file as the current episode and ask you to play it.
 
 ### Options
 
 * `-c`, `--current FILENAME`
-  Set a specific file as the current episode. You will have to do this with the first episode in the beginning.
+  Set a specific file as the current episode.
+
+* `-n`, `--null-current`
+  Set the current episode to none.
+
+* `-o`, `--open FILENAME`
+  Open a specific file, you may have order this before `--player`
+
+* `-p`, `--player "COMMAND STRING"`
+  Supply an alternative command string like "mpv --loop" or "vlc"
 
 * `-d`, `--dir DIRECTORY`
   Specify the working directory (defaults to the current directory).
 
-* `-v`, `--verbose`
-  Enable verbose output.
+* `-w`, `--watched [FILENAME1 FILENAME2 ...]`
+  Flag specific file(s) as watched. If no file(s) are supplied it will flag all of them.
+
+
+* `-u`, `--unwatched [FILENAME1 FILENAME2 ...]`
+  Flag specific file(s) as inwatched. If no file(s) are supplied it will flag all of them.
+
+* `-s`, `--stats`
+  Show some stats about the working media directory such as your progress.
 
 * `-h`, `--help`
   Show help message and exit.
-
-### Marking a Specific File as Current
-
-To set a particular file as the current episode:
-
-```bash
-./whatswatched.py -c "Episode1.mkv"
-```
-
-
-
-### Verbose Output
-
-To enable verbose output for debugging or informational purposes. This is useless tbh and as of now just prints a confirmation message when using the `--current` option.
-
-```bash
-./media_tracker.py -v
-```
-
-
-
-### Help
-
-To view the help message with all available options (so what you're doing now):
-
-```bash
-./media_tracker.py -h
-```
-
-
 
 ## How It Works
 
@@ -134,11 +109,11 @@ To view the help message with all available options (so what you're doing now):
 3. **Playback Loop**:
 
    * If a current episode is already set, prompts the user to play it.
-   * After playback, prompts to mark the episode as watched. If yes, it will update the next episode as the new current episode and prompt the user to play it.
+   * After playback, prompts to mark the episode as watched. If yes, it will update the next episode as the new current episode and prompt the user continue the loop by playing the next episode.
 
 4. **Data Persistence**:
 
-   * Updates `.whatswatched.json` with the latest watch status and timestamps.
+   * Updates `.whatswatched.json` (located in the same directory of the media) with the latest watch status and timestamps.
 
 ## Data Format
 
