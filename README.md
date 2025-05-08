@@ -1,9 +1,9 @@
 # whatswatched
-A command-line tool to track and play media files in a directory using `mpv`. It maintains a JSON-based watch history, allowing you to resume from where you left off.
+A command-line tool to track and play media files in a directory using `mpv`. It maintains a JSON-based watch history (in the form of a hidden json within the directory of the media), allowing you to resume from where you left off.
 
 ## This is for
 
-People that want to keep what episode they're on in a media directory without leaving their command line... that also use `mpv`.
+People that want to keep track of what episode they're on in a media directory without leaving their command line... that also use `mpv`.
 
 ## Table of Contents
 
@@ -66,9 +66,15 @@ Run the script from the command line:
 ./whatswatched.py [options]
 ```
 
-If you are doing this in a media directory for the first time, you will have to manually set the first episode with the `--current` option first. *(See below)*
+If you are doing this in a media directory for the first time, this will create the JSON file to index the videos in the directory. Then you will have to manually set the first episode with the `--current` option.
 
-You press `shift+q` to save your resume posistion for when you reopen it with `mpv`. This is great if you're partially through the media file and want to resume it later. `whatswatched` is blind to this, which is why it asks you if you finished watching the media file when you exit `mpv`.
+```bash
+./whatswatched.py --current /path/to/Episode1.mkv
+```
+
+After doing that you can run the script without options to prompt if you want to play the current episode in that directory.
+
+**TIP:** You can press `shift+q` to exit and save your resume posistion for when you reopen it with `mpv`. This is great if you're partially through the media file and want to resume it later. `whatswatched` is blind to this, which is why it asks you if you finished watching the media file when you exit `mpv`. If you give an affirmative input it mark the next file as the current episode and ask you to play it.
 
 ### Options
 
